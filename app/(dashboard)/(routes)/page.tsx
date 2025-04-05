@@ -5,7 +5,6 @@ export default function Home() {
   return (
     <div>
       {' '}
-      <UserButton afterSwitchSessionUrl="/" />
       <p>protected route </p>
       <p>Hello type</p>
       <Button variant="destructive">HEllo</Button>
