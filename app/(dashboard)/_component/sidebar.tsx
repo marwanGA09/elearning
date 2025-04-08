@@ -16,3 +16,4 @@ function Sidebar() {
 }
 
 export default Sidebar;
+// No additional code is needed at the placeholder.
