@@ -4,7 +4,7 @@ import { UserButton } from '@clerk/nextjs';
 import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 import { Button } from './ui/button';
-import { Ghost, LogOut } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import Link from 'next/link';
 
 function NavbarRoutes() {
@@ -16,9 +16,11 @@ function NavbarRoutes() {
   return (
     <div className="flex gap-x-2 ml-auto">
       {isTeacher || isPlayerPage ? (
-        <Button>
-          <LogOut className="h-4 w-4 mr-2" /> Exit
-        </Button>
+        <Link href={'/'}>
+          <Button>
+            <LogOut className="h-4 w-4 mr-2" /> Exit
+          </Button>
+        </Link>
       ) : (
         <Link href={'/teacher/course'}>
           <Button variant="ghost" size="sm">
