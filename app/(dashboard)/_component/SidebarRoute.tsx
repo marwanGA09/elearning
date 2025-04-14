@@ -22,12 +22,12 @@ const guestRoutes = [
 const teacherRoute = [
   {
     icon: List,
-    label: 'course',
+    label: 'Course',
     ref: '/teacher/course',
   },
   {
     icon: BarChart,
-    label: 'analytics',
+    label: 'Analytics',
     ref: '/teacher/analytics',
   },
 ];
