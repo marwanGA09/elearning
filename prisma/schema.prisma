@@ -14,8 +14,41 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model course {
+model Course {
   id Int @id  @unique  @default(autoincrement())
   userId  String
-  
+  title String
+  description String? @db.Text
+  imageUrl String? @db.Text
+  price Float?
+isPublished Boolean? @default(false)
+ 
+ categoryId Int?
+ attachments Attachment[]
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+ 
+category Category? @relation(fields: [categoryId],references: [id])
+
+@@index([categoryId])
+}
+
+model Category {
+  id  Int @id  @unique @default(autoincrement())
+name String
+course Course[]
+
+}
+
+model Attachment {
+  id Int @id  @unique  @default(autoincrement())
+  courseId Int
+  name String
+  url String? @db.Text
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  course Course? @relation(fields: [courseId], references: [id],onDelete: Cascade)
+  // onDelete: Cascade will delete the attachment if the course is deleted
+  @@index([courseId])
 }
