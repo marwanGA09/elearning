@@ -10,5 +10,4 @@ if (process.env.NODE_ENV !== 'production') {
   globalThis.prisma = db;
 }
 
-console.log({ globalThis });
-
+// console.log({ globalThis });

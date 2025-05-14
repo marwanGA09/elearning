@@ -22,7 +22,7 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 
 const formSchema = z.object({
-  tittle: z.string().min(1, {
+  title: z.string().min(1, {
     message: 'Title is required',
   }),
 });
@@ -32,7 +32,7 @@ function CreateCourse() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { tittle: '' },
+    defaultValues: { title: '' },
   });
 
   const { isSubmitting, isLoading, isValid } = form.formState;
@@ -41,7 +41,8 @@ function CreateCourse() {
     try {
       const response = await axios.post('/api/courses', value);
 
-      router.push(`teacher/course/${response.data.id}`);
+      router.push(`/teacher/course/${response.data.id}`);
+      toast.success('Course created successfully');
     } catch (e) {
       toast.error('Some thing went wrong');
     }
@@ -63,7 +64,7 @@ function CreateCourse() {
           >
             <FormField
               control={form.control}
-              name="tittle"
+              name="title"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Course Title</FormLabel>
