@@ -5,6 +5,8 @@ import { LayoutDashboard } from 'lucide-react';
 import { notFound, redirect } from 'next/navigation';
 import React from 'react';
 import TitleForm from './_component/TitleForm';
+import { Description } from '@radix-ui/react-dialog';
+import DescriptionForm from './_component/DescriptionForm';
 
 async function page({ params }: { params: Promise<{ courseId: string }> }) {
   const { userId } = await auth();
@@ -51,6 +53,7 @@ async function page({ params }: { params: Promise<{ courseId: string }> }) {
             <h2 className="text-xl">Customize you course</h2>
           </div>
           <TitleForm initialData={course} />
+          <DescriptionForm initialData={course} />
         </div>
       </div>
     </div>

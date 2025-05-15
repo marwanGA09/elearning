@@ -1,6 +1,6 @@
 'use client';
 import axios from 'axios';
-import { Schema, z } from 'zod';
+import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import {
@@ -13,25 +13,28 @@ import {
   FormItem,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Link, Pencil } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-interface TitleFormProps {
+import { Textarea } from '@/components/ui/textarea';
+import { cx } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
+interface DescriptionFormProps {
   initialData: {
-    title: string;
+    description: string | null | undefined;
     id: string;
   };
 }
 
 const formSchema = z.object({
-  title: z.string().min(1, {
-    message: 'Title is required',
+  description: z.string().min(1, {
+    message: 'description is required',
   }),
 });
 
-function TitleForm({ initialData }: TitleFormProps) {
+function DescriptionForm({ initialData }: DescriptionFormProps) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(true);
   const toggleEdit = () => {
@@ -39,10 +42,10 @@ function TitleForm({ initialData }: TitleFormProps) {
   };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData,
+    defaultValues: { description: initialData.description || '' },
   });
 
-  const { isSubmitting, isLoading, isValid } = form.formState;
+  const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (value: z.infer<typeof formSchema>) => {
     try {
@@ -56,25 +59,31 @@ function TitleForm({ initialData }: TitleFormProps) {
       toast.error('Something went wrong');
       console.log(e);
     }
-    console.log({ value });
   };
 
   return (
     <div className="mt-6 rounded-md bg-slate-100 border p-4">
       <div className="flex justify-between items-center font-medium">
-        Course Title
+        Course Description
         <Button onClick={toggleEdit} variant={'ghost'}>
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
-              <Pencil /> Edit title
+              <Pencil /> Edit description
             </>
           )}
         </Button>
       </div>
       {!isEditing ? (
-        <p className="text-sm mt-2">{initialData.title} </p>
+        <p
+          className={cn(
+            'text-sm mt-2',
+            !initialData.description && 'text-slate-500 italic'
+          )}
+        >
+          {initialData.description || 'No description'}{' '}
+        </p>
       ) : (
         <Form {...form}>
           <form
@@ -83,13 +92,13 @@ function TitleForm({ initialData }: TitleFormProps) {
           >
             <FormField
               control={form.control}
-              name="title"
+              name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
+                    <Textarea
                       className="bg-white"
-                      placeholder="e.g. 'Web Development'"
+                      placeholder="e.g. 'This is a course about ...'"
                       {...field}
                       disabled={isSubmitting}
                     />
@@ -111,4 +120,4 @@ function TitleForm({ initialData }: TitleFormProps) {
   );
 }
 
-export default TitleForm;
+export default DescriptionForm;
