@@ -13,7 +13,7 @@ import {
   FormItem,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Pencil } from 'lucide-react';
+import { ImageIcon, Pencil, PlusCircleIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -22,17 +22,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { cx } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Course } from '@prisma/client';
-interface DescriptionFormProps {
+import Image from 'next/image';
+import { FileUpload } from '@/components/FileUplaod';
+interface ImageFormProps {
   initialData: Course;
 }
 
 const formSchema = z.object({
-  description: z.string().min(1, {
-    message: 'description is required',
+  imageUrl: z.string().min(1, {
+    message: 'Image url is required',
   }),
 });
 
-function DescriptionForm({ initialData }: DescriptionFormProps) {
+function ImageForm({ initialData }: ImageFormProps) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(true);
   const toggleEdit = () => {
@@ -40,7 +42,7 @@ function DescriptionForm({ initialData }: DescriptionFormProps) {
   };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { description: initialData.description || '' },
+    defaultValues: { imageUrl: initialData.imageUrl || '' },
   });
 
   const { isSubmitting, isValid } = form.formState;
@@ -62,60 +64,55 @@ function DescriptionForm({ initialData }: DescriptionFormProps) {
   return (
     <div className="mt-6 rounded-md bg-slate-100 border p-4">
       <div className="flex justify-between items-center font-medium">
-        Course Description
+        Course Image
         <Button onClick={toggleEdit} variant={'ghost'}>
           {isEditing ? (
             <>Cancel</>
+          ) : initialData.imageUrl ? (
+            <>
+              <Pencil /> Edit Image
+            </>
           ) : (
             <>
-              <Pencil /> Edit description
+              {' '}
+              <PlusCircleIcon /> Add Image
             </>
           )}
         </Button>
       </div>
       {!isEditing ? (
-        <p
-          className={cn(
-            'text-sm mt-2',
-            !initialData.description && 'text-slate-500 italic'
-          )}
-        >
-          {initialData.description || 'No description'}{' '}
-        </p>
-      ) : (
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-8"
-          >
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Textarea
-                      className="bg-white"
-                      placeholder="e.g. 'This is a course about ...'"
-                      {...field}
-                      disabled={isSubmitting}
-                    />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
+        !initialData.imageUrl ? (
+          <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
+            <ImageIcon className="h-10 w-10 text-slate-500" />
+          </div>
+        ) : (
+          <div className="relative mt-2 aspect-video">
+            <Image
+              alt={'upload'}
+              src={initialData.imageUrl}
+              fill
+              className="object-cover rounded-md"
             />
-            <div className="flex items-center gap-x-2">
-              <Button type="submit" disabled={!isValid || isSubmitting}>
-                Save
-              </Button>
-            </div>
-          </form>
-        </Form>
+          </div>
+        )
+      ) : (
+        <div className="">
+          <FileUpload
+            endPoint="courseImage"
+            onChange={(ufsUrl) => {
+              if (ufsUrl) {
+                onSubmit({ imageUrl: ufsUrl });
+              }
+            }}
+          />
+          <div className="text-sm mt-2 text-muted-foreground">
+            {' '}
+            16:9 aspect ration is recommended
+          </div>{' '}
+        </div>
       )}
     </div>
   );
 }
 
-export default DescriptionForm;
+export default ImageForm;

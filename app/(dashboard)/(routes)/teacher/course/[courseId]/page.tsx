@@ -7,6 +7,7 @@ import React from 'react';
 import TitleForm from './_component/TitleForm';
 import { Description } from '@radix-ui/react-dialog';
 import DescriptionForm from './_component/DescriptionForm';
+import ImageForm from './_component/ImageForm';
 
 async function page({ params }: { params: Promise<{ courseId: string }> }) {
   const { userId } = await auth();
@@ -54,6 +55,7 @@ async function page({ params }: { params: Promise<{ courseId: string }> }) {
           </div>
           <TitleForm initialData={course} />
           <DescriptionForm initialData={course} />
+          <ImageForm initialData={course} />
         </div>
       </div>
     </div>

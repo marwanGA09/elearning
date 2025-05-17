@@ -13,10 +13,13 @@ const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
     rules: {
-      'react/display-name': 'off',
-      'no-console': 'off',
+      'react/display-name': 'warn',
+      'no-console': 'warn',
+      '@typescript-eslint/no-require-imports': 'warn',
+      '@typescript-eslint/no-this-alias': 'warn',
+      '@typescript-eslint/no-unused-expressions': 'warn',
+      '@typescript-eslint/no-empty-object-type': 'warn',
+      '@typescript-eslint/no-unused-vars': ['warn'],
     },
   },
 ];
-
-export default eslintConfig;
