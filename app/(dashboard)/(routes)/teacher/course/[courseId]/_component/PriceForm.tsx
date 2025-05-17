@@ -6,8 +6,6 @@ import { useForm } from 'react-hook-form';
 import {
   FormField,
   FormControl,
-  FormDescription,
-  FormLabel,
   Form,
   FormMessage,
   FormItem,
@@ -15,27 +13,28 @@ import {
 import { Input } from '@/components/ui/input';
 import { Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { cx } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Category, Course } from '@prisma/client';
-import { ComboboxDemo } from '@/components/ui/Combobox';
-import { init } from 'next/dist/compiled/webpack/webpack';
-interface CategoryFormProps {
+import { Course } from '@prisma/client';
+import { formatPrice } from '@/lib/format';
+interface PriceFormProps {
   initialData: Course;
-  options: { value: string; label: string }[];
 }
 
 const formSchema = z.object({
-  categoryId: z.string().min(1, {
-    message: 'CategoryId is required',
+  // price: z.coerce().number().min(0, {
+  //   message: 'price is required',
+  // }),
+  price: z.coerce.number().min(0, {
+    message: 'price is required',
   }),
 });
 
-function CategoryForm({ initialData, options }: CategoryFormProps) {
+function PriceForm({ initialData }: PriceFormProps) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const toggleEdit = () => {
@@ -43,7 +42,7 @@ function CategoryForm({ initialData, options }: CategoryFormProps) {
   };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { categoryId: initialData.categoryId || '' },
+    defaultValues: { price: initialData.price || undefined },
   });
 
   const { isSubmitting, isValid } = form.formState;
@@ -62,20 +61,16 @@ function CategoryForm({ initialData, options }: CategoryFormProps) {
     }
   };
 
-  const selectedOption = options.find(
-    (option) => option.value === initialData.categoryId
-  );
-
   return (
     <div className="mt-6 rounded-md bg-slate-100 border p-4">
       <div className="flex justify-between items-center font-medium">
-        Course Category
+        Course Price
         <Button onClick={toggleEdit} variant={'ghost'}>
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
-              <Pencil /> Edit Category
+              <Pencil /> Edit price
             </>
           )}
         </Button>
@@ -84,10 +79,10 @@ function CategoryForm({ initialData, options }: CategoryFormProps) {
         <p
           className={cn(
             'text-sm mt-2',
-            !initialData.categoryId && 'text-slate-500 italic'
+            !initialData.price && 'text-slate-500 italic'
           )}
         >
-          {selectedOption?.label || 'No category'}{' '}
+          {initialData?.price ? formatPrice(initialData.price) : 'NA'}
         </p>
       ) : (
         <Form {...form}>
@@ -97,19 +92,23 @@ function CategoryForm({ initialData, options }: CategoryFormProps) {
           >
             <FormField
               control={form.control}
-              name="categoryId"
-              render={({ field }) => {
-                console.log({ field });
-                return (
-                  <FormItem>
-                    <FormControl>
-                      <ComboboxDemo options={[...options]} {...field} />
-                    </FormControl>
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      className="bg-white"
+                      placeholder="eg. '100'"
+                      {...field}
+                      disabled={isSubmitting}
+                      step="0.01"
+                    />
+                  </FormControl>
 
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
+                  <FormMessage />
+                </FormItem>
+              )}
             />
             <div className="flex items-center gap-x-2">
               <Button type="submit" disabled={!isValid || isSubmitting}>
@@ -123,4 +122,4 @@ function CategoryForm({ initialData, options }: CategoryFormProps) {
   );
 }
 
-export default CategoryForm;
+export default PriceForm;

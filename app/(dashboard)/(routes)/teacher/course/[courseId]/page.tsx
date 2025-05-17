@@ -1,7 +1,13 @@
 import { IconBadge } from '@/components/IconBadge';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
-import { LayoutDashboard } from 'lucide-react';
+import {
+  CircleDollarSign,
+  File,
+  LayoutDashboard,
+  ListCheck,
+  ListChecks,
+} from 'lucide-react';
 import { notFound, redirect } from 'next/navigation';
 import React from 'react';
 import TitleForm from './_component/TitleForm';
@@ -10,6 +16,7 @@ import DescriptionForm from './_component/DescriptionForm';
 import ImageForm from './_component/ImageForm';
 import CategoryForm from './_component/CatagoryForm';
 import { Category } from '@prisma/client';
+import PriceForm from './_component/PriceForm';
 async function page({ params }: { params: Promise<{ courseId: string }> }) {
   const { userId } = await auth();
   if (!userId) {
@@ -20,10 +27,8 @@ async function page({ params }: { params: Promise<{ courseId: string }> }) {
   const course = await db.course.findUnique({
     where: { id: courseId },
   });
-  console.log({ course });
 
   const categories = await db.category.findMany({ orderBy: { name: 'asc' } });
-  console.log({ categories });
 
   if (!course) {
     return notFound();
@@ -40,7 +45,6 @@ async function page({ params }: { params: Promise<{ courseId: string }> }) {
   // const completedField = requiredField.filter((field) => Boolean(field)).length;
   // THE ABOVE LINE IS EQUIVALENT TO THE LINE BELOW
   const completedField = requiredField.filter(Boolean).length;
-
   const courseCompletionText = `${completedField}/${requiredField.length} fields completed`;
   return (
     <div className="p-6">
@@ -53,7 +57,7 @@ async function page({ params }: { params: Promise<{ courseId: string }> }) {
         </div>
       </div>
       <div className="grid gap-6 mt-16 md:grid-cols-2">
-        <div className="">
+        <div className="space-y-6">
           <div className="flex items-center gap-x-2">
             <IconBadge icon={LayoutDashboard} />{' '}
             <h2 className="text-xl">Customize you course</h2>
@@ -67,6 +71,26 @@ async function page({ params }: { params: Promise<{ courseId: string }> }) {
               return { value: category.id, label: category.name };
             })}
           />
+        </div>
+        <div className="space-y-6">
+          <div className="flex items-center gap-x-2">
+            <IconBadge icon={ListChecks} />{' '}
+            <h2 className="text-xl">Course Chapters</h2>
+          </div>
+          <div>TODO CHAPTERS</div>
+          <div className="space-y-6">
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={CircleDollarSign} />{' '}
+              <h2 className="text-xl">Sell your price</h2>
+            </div>
+            <PriceForm initialData={course} />
+          </div>
+          <div className="space-y-6">
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={File} /> <h2 className="text-xl">Attachments</h2>
+            </div>
+            <ImageForm initialData={course} />
+          </div>
         </div>
       </div>
     </div>
