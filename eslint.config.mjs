@@ -12,6 +12,7 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
+    // NOTE use this for dev only remove unnecessary rules in production
     rules: {
       'react/display-name': 'warn',
       'no-console': 'warn',

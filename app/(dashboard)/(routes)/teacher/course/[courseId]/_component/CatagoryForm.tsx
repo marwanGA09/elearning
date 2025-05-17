@@ -13,28 +13,29 @@ import {
   FormItem,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { ImageIcon, Pencil, PlusCircleIcon } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { cx } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Course } from '@prisma/client';
-import Image from 'next/image';
-import { FileUpload } from '@/components/FileUplaod';
-interface ImageFormProps {
+import { Category, Course } from '@prisma/client';
+import { ComboboxDemo } from '@/components/ui/Combobox';
+import { init } from 'next/dist/compiled/webpack/webpack';
+interface CategoryFormProps {
   initialData: Course;
+  options: { value: string; label: string }[];
 }
 
 const formSchema = z.object({
-  imageUrl: z.string().min(1, {
-    message: 'Image url is required',
+  categoryId: z.string().min(1, {
+    message: 'CategoryId is required',
   }),
 });
 
-function ImageForm({ initialData }: ImageFormProps) {
+function CategoryForm({ initialData, options }: CategoryFormProps) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const toggleEdit = () => {
@@ -42,7 +43,7 @@ function ImageForm({ initialData }: ImageFormProps) {
   };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { imageUrl: initialData.imageUrl || '' },
+    defaultValues: { categoryId: initialData.categoryId || '' },
   });
 
   const { isSubmitting, isValid } = form.formState;
@@ -61,58 +62,62 @@ function ImageForm({ initialData }: ImageFormProps) {
     }
   };
 
+  const selectedOption = options.find(
+    (option) => option.value === initialData.categoryId
+  );
+
   return (
     <div className="mt-6 rounded-md bg-slate-100 border p-4">
       <div className="flex justify-between items-center font-medium">
-        Course Image
+        Course Category
         <Button onClick={toggleEdit} variant={'ghost'}>
           {isEditing ? (
             <>Cancel</>
-          ) : initialData.imageUrl ? (
-            <>
-              <Pencil /> Edit Image
-            </>
           ) : (
             <>
-              {' '}
-              <PlusCircleIcon /> Add Image
+              <Pencil /> Edit Category
             </>
           )}
         </Button>
       </div>
       {!isEditing ? (
-        !initialData.imageUrl ? (
-          <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
-            <ImageIcon className="h-10 w-10 text-slate-500" />
-          </div>
-        ) : (
-          <div className="relative mt-2 aspect-video">
-            <Image
-              alt={'upload'}
-              src={initialData.imageUrl}
-              fill
-              className="object-cover rounded-md"
-            />
-          </div>
-        )
+        <p
+          className={cn(
+            'text-sm mt-2',
+            !initialData.categoryId && 'text-slate-500 italic'
+          )}
+        >
+          {selectedOption?.label || 'No category'}{' '}
+        </p>
       ) : (
-        <div className="">
-          <FileUpload
-            endPoint="courseImage"
-            onChange={(ufsUrl) => {
-              if (ufsUrl) {
-                onSubmit({ imageUrl: ufsUrl });
-              }
-            }}
-          />
-          <div className="text-sm mt-2 text-muted-foreground">
-            {' '}
-            16:9 aspect ration is recommended
-          </div>{' '}
-        </div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 mt-8"
+          >
+            <FormField
+              control={form.control}
+              name="categoryId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <ComboboxDemo options={[...options]} {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex items-center gap-x-2">
+              <Button type="submit" disabled={!isValid || isSubmitting}>
+                Save
+              </Button>
+            </div>
+          </form>
+        </Form>
       )}
     </div>
   );
 }
 
-export default ImageForm;
+export default CategoryForm;

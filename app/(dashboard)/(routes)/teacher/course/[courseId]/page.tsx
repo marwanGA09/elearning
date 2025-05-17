@@ -8,7 +8,8 @@ import TitleForm from './_component/TitleForm';
 import { Description } from '@radix-ui/react-dialog';
 import DescriptionForm from './_component/DescriptionForm';
 import ImageForm from './_component/ImageForm';
-
+import CategoryForm from './_component/CatagoryForm';
+import { Category } from '@prisma/client';
 async function page({ params }: { params: Promise<{ courseId: string }> }) {
   const { userId } = await auth();
   if (!userId) {
@@ -20,6 +21,10 @@ async function page({ params }: { params: Promise<{ courseId: string }> }) {
     where: { id: courseId },
   });
   console.log({ course });
+
+  const categories = await db.category.findMany({ orderBy: { name: 'asc' } });
+  console.log({ categories });
+
   if (!course) {
     return notFound();
   }
@@ -56,6 +61,12 @@ async function page({ params }: { params: Promise<{ courseId: string }> }) {
           <TitleForm initialData={course} />
           <DescriptionForm initialData={course} />
           <ImageForm initialData={course} />
+          <CategoryForm
+            initialData={course}
+            options={categories.map((category) => {
+              return { value: category.id, label: category.name };
+            })}
+          />
         </div>
       </div>
     </div>
