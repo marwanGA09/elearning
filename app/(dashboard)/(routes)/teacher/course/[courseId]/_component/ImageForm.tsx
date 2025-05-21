@@ -3,24 +3,12 @@ import axios from 'axios';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import {
-  FormField,
-  FormControl,
-  FormDescription,
-  FormLabel,
-  Form,
-  FormMessage,
-  FormItem,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+
 import { ImageIcon, Pencil, PlusCircleIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { Textarea } from '@/components/ui/textarea';
-import { cx } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
 import { Course } from '@prisma/client';
 import Image from 'next/image';
 import { FileUpload } from '@/components/FileUplaod';
@@ -49,6 +37,7 @@ function ImageForm({ initialData }: ImageFormProps) {
 
   const onSubmit = async (value: z.infer<typeof formSchema>) => {
     try {
+      console.log('value from onsubmit ', { value });
       const res = await axios.patch(`/api/courses/${initialData.id}`, value);
 
       console.log({ res });
@@ -100,8 +89,9 @@ function ImageForm({ initialData }: ImageFormProps) {
           <FileUpload
             endPoint="courseImage"
             onChange={(ufsUrl) => {
+              console.log({ ufsUrl });
               if (ufsUrl) {
-                onSubmit({ imageUrl: ufsUrl });
+                onSubmit({ imageUrl: ufsUrl.ufsUrl });
               }
             }}
           />

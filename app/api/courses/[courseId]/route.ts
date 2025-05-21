@@ -14,7 +14,7 @@ export async function PATCH(
     }
     const { courseId } = await params;
     const value = await req.json();
-    console.log({ value });
+    console.log('value from patch route', { value });
     console.log({ courseId });
     console.log(typeof courseId);
 

@@ -17,6 +17,7 @@ import ImageForm from './_component/ImageForm';
 import CategoryForm from './_component/CatagoryForm';
 import { Category } from '@prisma/client';
 import PriceForm from './_component/PriceForm';
+import AttachmentsForm from './_component/AttachmentForm';
 async function page({ params }: { params: Promise<{ courseId: string }> }) {
   const { userId } = await auth();
   if (!userId) {
@@ -25,7 +26,8 @@ async function page({ params }: { params: Promise<{ courseId: string }> }) {
 
   const { courseId } = await params;
   const course = await db.course.findUnique({
-    where: { id: courseId },
+    where: { id: courseId, userId },
+    include: { attachments: { orderBy: { createdAt: 'desc' } } },
   });
 
   const categories = await db.category.findMany({ orderBy: { name: 'asc' } });
@@ -87,9 +89,10 @@ async function page({ params }: { params: Promise<{ courseId: string }> }) {
           </div>
           <div className="space-y-6">
             <div className="flex items-center gap-x-2">
-              <IconBadge icon={File} /> <h2 className="text-xl">Attachments</h2>
+              <IconBadge icon={File} />{' '}
+              <h2 className="text-xl">Resource And Attachments</h2>
             </div>
-            <ImageForm initialData={course} />
+            <AttachmentsForm initialData={course} />
           </div>
         </div>
       </div>
