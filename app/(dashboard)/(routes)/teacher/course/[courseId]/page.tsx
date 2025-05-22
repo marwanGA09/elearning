@@ -18,6 +18,8 @@ import CategoryForm from './_component/CatagoryForm';
 import { Category } from '@prisma/client';
 import PriceForm from './_component/PriceForm';
 import AttachmentsForm from './_component/AttachmentForm';
+import ChapterForm from './_component/ChapterForm';
+
 async function page({ params }: { params: Promise<{ courseId: string }> }) {
   const { userId } = await auth();
   if (!userId) {
@@ -27,7 +29,10 @@ async function page({ params }: { params: Promise<{ courseId: string }> }) {
   const { courseId } = await params;
   const course = await db.course.findUnique({
     where: { id: courseId, userId },
-    include: { attachments: { orderBy: { createdAt: 'desc' } } },
+    include: {
+      attachments: { orderBy: { createdAt: 'desc' } },
+      chapters: { orderBy: { position: 'asc' } },
+    },
   });
 
   const categories = await db.category.findMany({ orderBy: { name: 'asc' } });
@@ -40,8 +45,9 @@ async function page({ params }: { params: Promise<{ courseId: string }> }) {
     course.title,
     course.description,
     course.imageUrl,
-    course.isPublished,
+    course.categoryId,
     course.price,
+    course.chapters.some((chapter) => chapter.isPublished),
   ];
 
   // const completedField = requiredField.filter((field) => Boolean(field)).length;
@@ -79,7 +85,8 @@ async function page({ params }: { params: Promise<{ courseId: string }> }) {
             <IconBadge icon={ListChecks} />{' '}
             <h2 className="text-xl">Course Chapters</h2>
           </div>
-          <div>TODO CHAPTERS</div>
+          {/* <div>TODO CHAPTERS</div> */}
+          <ChapterForm initialData={course} />
           <div className="space-y-6">
             <div className="flex items-center gap-x-2">
               <IconBadge icon={CircleDollarSign} />{' '}
