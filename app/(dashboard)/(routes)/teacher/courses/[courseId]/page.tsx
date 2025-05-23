@@ -10,15 +10,15 @@ import {
 } from 'lucide-react';
 import { notFound, redirect } from 'next/navigation';
 import React from 'react';
-import TitleForm from './_component/TitleForm';
+import TitleForm from './_components/TitleForm';
 import { Description } from '@radix-ui/react-dialog';
-import DescriptionForm from './_component/DescriptionForm';
-import ImageForm from './_component/ImageForm';
-import CategoryForm from './_component/CatagoryForm';
+import DescriptionForm from './_components/DescriptionForm';
+import ImageForm from './_components/ImageForm';
+import CategoryForm from './_components/CatagoryForm';
 import { Category } from '@prisma/client';
-import PriceForm from './_component/PriceForm';
-import AttachmentsForm from './_component/AttachmentForm';
-import ChapterForm from './_component/ChapterForm';
+import PriceForm from './_components/PriceForm';
+import AttachmentsForm from './_components/AttachmentForm';
+import ChapterForm from './_components/ChapterForm';
 
 async function page({ params }: { params: Promise<{ courseId: string }> }) {
   const { userId } = await auth();

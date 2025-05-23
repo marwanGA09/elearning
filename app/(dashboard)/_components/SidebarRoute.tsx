@@ -22,8 +22,8 @@ const guestRoutes = [
 const teacherRoute = [
   {
     icon: List,
-    label: 'Course',
-    ref: '/teacher/course',
+    label: 'Courses',
+    ref: '/teacher/courses',
   },
   {
     icon: BarChart,
