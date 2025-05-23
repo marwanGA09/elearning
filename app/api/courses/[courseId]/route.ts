@@ -13,10 +13,21 @@ export async function PATCH(
       return new NextResponse('Unauthorized', { status: 401 });
     }
     const { courseId } = await params;
+
+    const courseOwner = await db.course.findUnique({
+      where: {
+        id: courseId,
+        userId: `${userId}`,
+      },
+    });
+    if (!courseOwner) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+
     const value = await req.json();
-    console.log('value from patch route', { value });
-    console.log({ courseId });
-    console.log(typeof courseId);
+    // console.log('value from patch route', { value });
+    // console.log({ courseId });
+    // console.log(typeof courseId);
 
     const updatedCourse = await db.course.update({
       where: {

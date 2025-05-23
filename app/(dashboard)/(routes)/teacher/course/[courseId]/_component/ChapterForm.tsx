@@ -21,6 +21,7 @@ import { cx } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Chapter, Course } from '@prisma/client';
 import { title } from 'process';
+import DroppableChapter from './DroppableChapter';
 interface ChapterFormProps {
   initialData: Course & { chapters: Chapter[] };
 }
@@ -33,7 +34,6 @@ const formSchema = z.object({
 
 function ChapterForm({ initialData }: ChapterFormProps) {
   const router = useRouter();
-  const [isUpdating, setIsUpdating] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const toggleCreating = () => {
     setIsCreating((edit) => !edit);
@@ -121,11 +121,12 @@ function ChapterForm({ initialData }: ChapterFormProps) {
       )}
 
       {!isCreating && (
-        <div>
-          {initialData.chapters.map((chapter) => (
-            <div key={chapter.id}>{chapter.title}</div>
-          ))}
-        </div>
+        // <div>
+        //   {initialData.chapters.map((chapter) => (
+        //     <div key={chapter.id}>{chapter.title}</div>
+        //   ))}
+        // </div>
+        <DroppableChapter chaptersProp={initialData.chapters} />
       )}
       {!isCreating && (
         <p className="text-xs text-muted-foreground mt-4">
