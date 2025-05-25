@@ -22,7 +22,7 @@ function NavbarRoutes() {
           </Button>
         </Link>
       ) : (
-        <Link href={'/teacher/course'}>
+        <Link href={'/teacher/courses'}>
           <Button variant="ghost" size="sm">
             Teacher Mode
           </Button>

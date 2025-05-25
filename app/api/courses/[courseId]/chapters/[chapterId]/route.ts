@@ -20,10 +20,13 @@ export async function PATCH(
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const { isPublished, updatedData } = await req.json();
+    const updatedDDDDD = await req.json();
+    const { isPublished, ...updatedData } = updatedDDDDD;
+    console.log('updated data', updatedDDDDD);
+    console.log('updatedData', updatedData);
     const chapter = await db.chapter.update({
       where: { id: chapterId, courseId },
-      data: { ...updatedData },
+      data: updatedData,
     });
 
     console.log({ chapter });

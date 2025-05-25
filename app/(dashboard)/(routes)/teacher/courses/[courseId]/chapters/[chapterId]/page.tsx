@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import React from 'react';
 import ChapterTitleForm from './_components/ChapterTitleForm';
+import Tiptap from '@/components/Editor';
+import ChapterDescriptionForm from './_components/ChapterDescriptionForm';
 
 async function chapterPage({
   params,
@@ -65,6 +67,7 @@ async function chapterPage({
             <h2 className="text-xl">Customize your chapter</h2>
           </div>
           <ChapterTitleForm initialData={chapter} />
+          <ChapterDescriptionForm initialData={chapter} />
         </div>
       </div>
     </div>
