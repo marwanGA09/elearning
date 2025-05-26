@@ -11,8 +11,13 @@ import {
   UnderlineIcon,
   ListOrderedIcon,
   ListIcon,
-  HeadingIcon,
   ChevronDown,
+  Heading1Icon,
+  Heading2Icon,
+  Heading3Icon,
+  Heading4Icon,
+  Heading5Icon,
+  Heading6Icon,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -23,7 +28,14 @@ interface TiptapProps {
 
 const Tiptap = ({ content, onChange }: TiptapProps) => {
   const [headingLevel, setHeadingLevel] = useState<1 | 2 | 3 | 4 | 5 | 6>(1);
-
+  const HeadingIcons = [
+    <Heading1Icon />,
+    <Heading2Icon />,
+    <Heading3Icon />,
+    <Heading4Icon />,
+    <Heading5Icon />,
+    <Heading6Icon />,
+  ];
   const editor = useEditor({
     extensions: [StarterKit, Underline],
     content,
@@ -51,7 +63,8 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
             type="button"
             className="p-2 flex items-baseline justify-center"
           >
-            <HeadingIcon /> <ChevronDown className="h-4 w-4 " />
+            {HeadingIcons[headingLevel - 1]}
+            <ChevronDown className="h-4 w-4 " />
           </button>
           <select
             value={headingLevel}
@@ -109,7 +122,10 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
           <ListOrderedIcon />
         </button>
       </div>
-      <EditorContent editor={editor} className="border rounded-lg p-2" />
+      <EditorContent
+        editor={editor}
+        className="chapter-description-form border rounded-lg p-2"
+      />
     </div>
   );
 };

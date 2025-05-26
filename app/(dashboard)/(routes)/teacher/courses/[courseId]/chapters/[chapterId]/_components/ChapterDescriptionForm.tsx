@@ -81,7 +81,7 @@ function ChapterDescriptionForm({ initialData }: ChapterDescriptionFormProps) {
         >
           {initialData.description ? (
             <div
-              className="prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl"
+              className="chapter-description-form"
               dangerouslySetInnerHTML={{ __html: initialData.description }}
             />
           ) : (
