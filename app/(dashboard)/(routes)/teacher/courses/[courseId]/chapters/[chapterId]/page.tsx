@@ -1,13 +1,14 @@
 import { IconBadge } from '@/components/IconBadge';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
-import { ArrowLeft, LayoutDashboard } from 'lucide-react';
+import { ArrowLeft, Eye, LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import React from 'react';
 import ChapterTitleForm from './_components/ChapterTitleForm';
 import Tiptap from '@/components/Editor';
 import ChapterDescriptionForm from './_components/ChapterDescriptionForm';
+import PriceForm from './_components/PriceForm';
 
 async function chapterPage({
   params,
@@ -63,11 +64,16 @@ async function chapterPage({
       <div className="grid gap-6 mt-16 md:grid-cols-2">
         <div className="space-y-6">
           <div className="flex items-center gap-x-2">
-            <IconBadge icon={LayoutDashboard} />{' '}
+            <IconBadge icon={LayoutDashboard} />
             <h2 className="text-xl">Customize your chapter</h2>
           </div>
           <ChapterTitleForm initialData={chapter} />
           <ChapterDescriptionForm initialData={chapter} />
+          <div className="flex items-center gap-x-2">
+            <IconBadge icon={Eye} />{' '}
+            <h2 className="text-xl">Customize Access</h2>
+          </div>
+          <PriceForm initialData={chapter} />
         </div>
       </div>
     </div>

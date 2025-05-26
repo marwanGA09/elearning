@@ -9,6 +9,7 @@ import {
   Form,
   FormMessage,
   FormItem,
+  FormDescription,
 } from '@/components/ui/form';
 import { Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -17,18 +18,16 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { cn } from '@/lib/utils';
 import { Chapter, Course } from '@prisma/client';
-import Tiptap from '@/components/Editor';
-interface ChapterDescriptionFormProps {
+import { Checkbox } from '@/components/ui/checkbox';
+interface PriceFormProps {
   initialData: Chapter;
 }
 
 const formSchema = z.object({
-  description: z.string().min(1, {
-    message: 'description is required',
-  }),
+  isFree: z.boolean(),
 });
 
-function ChapterDescriptionForm({ initialData }: ChapterDescriptionFormProps) {
+function PriceForm({ initialData }: PriceFormProps) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const toggleEdit = () => {
@@ -36,7 +35,7 @@ function ChapterDescriptionForm({ initialData }: ChapterDescriptionFormProps) {
   };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { description: initialData.description || '' },
+    defaultValues: { isFree: Boolean(initialData.isFree) },
   });
 
   const { isSubmitting, isValid } = form.formState;
@@ -61,33 +60,28 @@ function ChapterDescriptionForm({ initialData }: ChapterDescriptionFormProps) {
   return (
     <div className="mt-6 rounded-md bg-slate-100 border p-4">
       <div className="flex justify-between items-center font-medium">
-        Chapter Description
+        Chapter Access
         <Button onClick={toggleEdit} variant={'ghost'}>
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
-              <Pencil /> Edit Chapter
+              <Pencil /> Edit Access
             </>
           )}
         </Button>
       </div>
       {!isEditing ? (
-        <div
+        <p
           className={cn(
             'text-sm mt-2',
-            !initialData.description && 'text-slate-500 italic'
+            !initialData.isFree && 'text-slate-500 italic'
           )}
         >
-          {initialData.description ? (
-            <div
-              className="prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl"
-              dangerouslySetInnerHTML={{ __html: initialData.description }}
-            />
-          ) : (
-            'No description'
-          )}{' '}
-        </div>
+          {initialData.description
+            ? ' This Chapter is free for preview'
+            : '  This Chapter is not free'}{' '}
+        </p>
       ) : (
         <Form {...form}>
           <form
@@ -96,22 +90,22 @@ function ChapterDescriptionForm({ initialData }: ChapterDescriptionFormProps) {
           >
             <FormField
               control={form.control}
-              name="description"
+              name="isFree"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-row item-start space-x-3 space-y-0 rounded-md border p-4 ">
                   <FormControl>
-                    {/* <Textarea
-                      className="bg-white"
-                      placeholder="e.g. 'This is a course about ...'"
-                      {...field}
-                      disabled={isSubmitting}
-                    /> */}
-                    <Tiptap
-                      content={initialData?.description || ''}
-                      {...field}
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
                     />
                   </FormControl>
-
+                  <div className="space-y-1 leading-1">
+                    {' '}
+                    <FormDescription>
+                      Check this box if you want to make this chapter free for
+                      review
+                    </FormDescription>{' '}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -128,4 +122,4 @@ function ChapterDescriptionForm({ initialData }: ChapterDescriptionFormProps) {
   );
 }
 
-export default ChapterDescriptionForm;
+export default PriceForm;

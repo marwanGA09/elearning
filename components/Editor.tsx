@@ -12,6 +12,7 @@ import {
   ListOrderedIcon,
   ListIcon,
   HeadingIcon,
+  ChevronDown,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -46,8 +47,11 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
     <div className="flex flex-col w-full p-2">
       <div className="flex space-x-2 mb-2">
         <div className="relative">
-          <button type="button" className="p-2">
-            <HeadingIcon />
+          <button
+            type="button"
+            className="p-2 flex items-baseline justify-center"
+          >
+            <HeadingIcon /> <ChevronDown className="h-4 w-4 " />
           </button>
           <select
             value={headingLevel}
