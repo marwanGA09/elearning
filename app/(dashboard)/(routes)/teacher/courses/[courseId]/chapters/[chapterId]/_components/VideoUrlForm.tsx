@@ -69,7 +69,7 @@ function VideoUrlForm({ initialData }: VideoUrlFormProps) {
           ) : (
             <>
               {' '}
-              <PlusCircleIcon /> Add Image
+              <PlusCircleIcon /> Add Video
             </>
           )}
         </Button>

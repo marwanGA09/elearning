@@ -18,20 +18,40 @@ export async function PATCH(
         id: courseId,
         userId: `${userId}`,
       },
+      include: {
+        chapters: true,
+      },
     });
+
     if (!courseOwner) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const updatedCourse = await db.course.update({
-      where: {
-        id: courseId,
-        userId,
-      },
-      data: { isPublished: true },
-    });
+    const hasPublishedChapter = courseOwner.chapters.some(
+      (chapter) => chapter.isPublished
+    );
 
-    return NextResponse.json(updatedCourse);
+    console.log({ hasPublishedChapter });
+
+    if (
+      hasPublishedChapter &&
+      courseOwner.description &&
+      courseOwner.categoryId &&
+      courseOwner.price &&
+      courseOwner.imageUrl
+    ) {
+      const updatedCourse = await db.course.update({
+        where: {
+          id: courseId,
+          userId,
+        },
+        data: { isPublished: true },
+      });
+      return NextResponse.json(updatedCourse);
+    }
+    return new NextResponse('Course has some unfilled requirement', {
+      status: 401,
+    });
   } catch (e) {
     console.log('[ERROR]', e);
     return new NextResponse('Internal Server Error', { status: 500 });

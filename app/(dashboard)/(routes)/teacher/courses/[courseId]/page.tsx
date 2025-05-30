@@ -45,10 +45,10 @@ async function page({ params }: { params: Promise<{ courseId: string }> }) {
 
   const requiredField = [
     course.title,
-    // course.description,
-    // course.imageUrl,
-    // course.categoryId,
-    // course.price,
+    course.description,
+    course.imageUrl,
+    course.categoryId,
+    course.price,
     course.chapters.some((chapter) => chapter.isPublished),
   ];
 
@@ -60,7 +60,7 @@ async function page({ params }: { params: Promise<{ courseId: string }> }) {
   const isCompleted = requiredField.every(Boolean);
   return (
     <>
-      {!isCompleted && (
+      {!course.isPublished && (
         <Banner
           variant={'warning'}
           label="This course is unpublished. It will not be visible to the students"
