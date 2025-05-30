@@ -1,6 +1,5 @@
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
-import { error } from 'console';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function PATCH(
@@ -22,15 +21,38 @@ export async function PATCH(
 
     const updatedDDDDD = await req.json();
     const { isPublished, ...updatedData } = updatedDDDDD;
+
     console.log('updated data', updatedDDDDD);
     console.log('updatedData', updatedData);
-    const chapter = await db.chapter.update({
-      where: { id: chapterId, courseId },
-      data: updatedData,
-    });
+    console.log('ll', isPublished);
 
-    console.log({ chapter });
+    if (isPublished) {
+      const chapter = await db.chapter.findUnique({
+        where: {
+          id: chapterId,
+        },
+      });
+      if (chapter?.title && chapter?.videoUrl && chapter?.description) {
+        const updatedChapter = await db.chapter.update({
+          where: { id: chapterId, courseId },
+          data: { isPublished },
+        });
 
+        console.log({ updatedChapter });
+        return NextResponse.json(updatedChapter);
+      } else {
+        return new NextResponse('Requirement field are filled', {
+          status: 401,
+        });
+      }
+    } else {
+      const chapter = await db.chapter.update({
+        where: { id: chapterId, courseId },
+        data: { ...updatedData },
+      });
+
+      console.log({ chapter });
+    }
     return new NextResponse('Ok', { status: 201 });
   } catch (e) {
     console.log('ERROR_CHAPTER', e);

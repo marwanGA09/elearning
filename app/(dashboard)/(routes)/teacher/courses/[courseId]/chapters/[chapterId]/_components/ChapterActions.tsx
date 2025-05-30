@@ -21,7 +21,6 @@ function ChapterActions({ disabled, chapter }: ChapterActionsProps) {
   const onDelete = async () => {
     try {
       setIsLoading(true);
-      console.log('value from onsubmit ');
       const res = await axios.delete(
         `/api/courses/${courseId}/chapters/${chapterId}`
       );
@@ -36,10 +35,40 @@ function ChapterActions({ disabled, chapter }: ChapterActionsProps) {
       setIsLoading(false);
     }
   };
+
+  const onPublishClick = async () => {
+    try {
+      setIsLoading(true);
+
+      if (!isPublished) {
+        const res = await axios.patch(
+          `/api/courses/${courseId}/chapters/${chapterId}`,
+          { isPublished: true }
+        );
+      }
+      if (isPublished) {
+        const res = await axios.patch(
+          `/api/courses/${courseId}/chapters/${chapterId}/unPublish`,
+          { isPublished: false }
+        );
+      }
+
+      toast.success(
+        `Course ${isPublished ? 'Unpublished' : 'published'} successfully`
+      );
+      // router.refresh();
+      router.refresh();
+    } catch (e) {
+      toast.error('Something went wrong');
+      console.log(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="flex items-center gap-x-2">
       <Button
-        onClick={() => {}}
+        onClick={() => onPublishClick()}
         disabled={disabled || isLoading}
         variant={'outline'}
         size={'sm'}
