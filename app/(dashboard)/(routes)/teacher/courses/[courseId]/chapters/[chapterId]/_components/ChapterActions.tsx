@@ -1,5 +1,7 @@
 'use client';
 
+import { ConfirmModal } from '@/components/modal/confirmModal';
+import { AlertDialog } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Chapter } from '@prisma/client';
 import axios from 'axios';
@@ -44,15 +46,11 @@ function ChapterActions({ disabled, chapter }: ChapterActionsProps) {
       >
         {isPublished ? 'Unpublish' : 'Publish'}
       </Button>
-      <Button
-        size={'sm'}
-        onClick={() => {
-          onDelete();
-        }}
-        disabled={isLoading}
-      >
-        <Trash2Icon className="w-4 h-4" />
-      </Button>
+      <ConfirmModal onConfirm={onDelete}>
+        <Button size={'sm'} disabled={isLoading}>
+          <Trash2Icon className="w-4 h-4" />
+        </Button>
+      </ConfirmModal>
     </div>
   );
 }
