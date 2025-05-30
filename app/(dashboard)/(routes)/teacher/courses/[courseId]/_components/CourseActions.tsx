@@ -3,6 +3,7 @@
 import { ConfirmModal } from '@/components/modal/confirmModal';
 import { AlertDialog } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { useConfettiStore } from '@/hooks/useConfettiStore';
 import { Chapter, Course } from '@prisma/client';
 import axios from 'axios';
 import { Trash2Icon } from 'lucide-react';
@@ -17,6 +18,7 @@ interface CourseActionsProps {
 function CourseActions({ disabled, course }: CourseActionsProps) {
   const { id: courseId, isPublished } = { ...course };
   const [isLoading, setIsLoading] = useState(false);
+  const { onOpen } = useConfettiStore();
   const router = useRouter();
   const onDelete = async () => {
     try {
@@ -49,9 +51,13 @@ function CourseActions({ disabled, course }: CourseActionsProps) {
         });
       }
 
-      toast.success(
-        `Course ${isPublished ? 'Unpublished' : 'published'} successfully`
-      );
+      if (isPublished) {
+        toast.success(`Course Unpublished successfully`);
+      } else {
+        toast.success(`Course published successfully`);
+        onOpen();
+      }
+
       // router.refresh();
       router.refresh();
     } catch (e) {
