@@ -3,31 +3,29 @@
 import { ConfirmModal } from '@/components/modal/confirmModal';
 import { AlertDialog } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Chapter } from '@prisma/client';
+import { Chapter, Course } from '@prisma/client';
 import axios from 'axios';
 import { Trash2Icon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
-interface ChapterActionsProps {
+interface CourseActionsProps {
   disabled: boolean;
-  chapter: Chapter;
+  course: Course;
 }
-function ChapterActions({ disabled, chapter }: ChapterActionsProps) {
-  const { id: chapterId, isPublished, courseId } = { ...chapter };
+function CourseActions({ disabled, course }: CourseActionsProps) {
+  const { id: courseId, isPublished } = { ...course };
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const onDelete = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.delete(
-        `/api/courses/${courseId}/chapters/${chapterId}`
-      );
+      const res = await axios.delete(`/api/courses/${courseId}`);
 
-      toast.success('Chapter Deleted successfully');
+      toast.success('Course Deleted successfully');
       // router.refresh();
-      router.push(`/teacher/courses/${courseId}`);
+      router.push(`/teacher/courses`);
     } catch (e) {
       toast.error('Something went wrong');
       console.log(e);
@@ -41,20 +39,18 @@ function ChapterActions({ disabled, chapter }: ChapterActionsProps) {
       setIsLoading(true);
 
       if (!isPublished) {
-        const res = await axios.patch(
-          `/api/courses/${courseId}/chapters/${chapterId}`,
-          { isPublished: true }
-        );
+        const res = await axios.patch(`/api/courses/${courseId}/publish`, {
+          isPublished: true,
+        });
       }
       if (isPublished) {
-        const res = await axios.patch(
-          `/api/courses/${courseId}/chapters/${chapterId}/unPublish`,
-          { isPublished: false }
-        );
+        const res = await axios.patch(`/api/courses/${courseId}/unpublish`, {
+          isPublished: false,
+        });
       }
 
       toast.success(
-        `Chapter ${isPublished ? 'Unpublished' : 'published'} successfully`
+        `Course ${isPublished ? 'Unpublished' : 'published'} successfully`
       );
       // router.refresh();
       router.refresh();
@@ -77,7 +73,7 @@ function ChapterActions({ disabled, chapter }: ChapterActionsProps) {
       </Button>
       <ConfirmModal
         onConfirm={onDelete}
-        label=" This action cannot be undone. This will permanently delete your chapter and remove your data from our servers."
+        label={` This action cannot be undone. This will permanently delete your course and remove your data from our servers.`}
       >
         <Button size={'sm'} disabled={isLoading}>
           <Trash2Icon className="w-4 h-4" />
@@ -87,4 +83,4 @@ function ChapterActions({ disabled, chapter }: ChapterActionsProps) {
   );
 }
 
-export default ChapterActions;
+export default CourseActions;
