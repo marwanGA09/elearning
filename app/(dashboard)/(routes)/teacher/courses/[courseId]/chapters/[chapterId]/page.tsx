@@ -11,6 +11,7 @@ import ChapterDescriptionForm from './_components/ChapterDescriptionForm';
 import PriceForm from './_components/PriceForm';
 import VideoUrlForm from './_components/VideoUrlForm';
 import Banner from '@/components/Banner';
+import ChapterActions from './_components/ChapterActions';
 
 async function chapterPage({
   params,
@@ -44,6 +45,7 @@ async function chapterPage({
 
   const totalField = requiredField.length;
   const completedField = requiredField.filter(Boolean).length;
+  const isComplete = requiredField.every(Boolean);
 
   const chapterCompletionText = `${completedField}/${totalField}`;
   return (
@@ -66,10 +68,11 @@ async function chapterPage({
             <div className="flex items-center justify-between w-full">
               <div className="flex flex-col gap-y-2">
                 <h1 className="text-2xl font-medium">Chapter Creation</h1>
-                <div className="text-sm text-slate-700">
+                <span className="text-sm text-slate-700">
                   Complete all chapters {chapterCompletionText}
-                </div>
+                </span>
               </div>
+              <ChapterActions disabled={!isComplete} chapter={chapter} />
             </div>
           </div>
         </div>
