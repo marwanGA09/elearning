@@ -11,13 +11,11 @@ import {
   FormItem,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Pencil, PlusCircle } from 'lucide-react';
+import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { Textarea } from '@/components/ui/textarea';
-import { cx } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Chapter, Course } from '@prisma/client';
 import { title } from 'process';

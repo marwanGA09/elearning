@@ -10,7 +10,7 @@ export const ConfettiProvider = () => {
   const { width, height } = useWindowSize();
   const [runConfetti, setRunConfetti] = useState(false);
 
-  console.log({ isOpen, width, height, runConfetti });
+  //   console.log({ isOpen, width, height, runConfetti });
   useEffect(() => {
     if (isOpen) {
       // Delay ensures canvas is ready before launching particles

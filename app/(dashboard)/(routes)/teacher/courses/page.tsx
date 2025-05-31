@@ -1,16 +1,26 @@
-import { IconBadge } from '@/components/IconBadge';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import React from 'react';
+import { columns } from './_components/columns';
+import { DataTable } from './_components/dataTable';
+import { db } from '@/lib/db';
+import { auth } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 
-function coursePage() {
+export default async function coursePage() {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return redirect('/');
+  }
+  const data = await db.course.findMany({
+    where: {
+      userId,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
   return (
-    <div>
-      <Link href={'/teacher/create'}>
-        <Button className="p-6">Add course</Button>
-      </Link>
+    <div className="container mx-auto py-10">
+      <DataTable columns={columns} data={data} />
     </div>
   );
 }
-
-export default coursePage;
