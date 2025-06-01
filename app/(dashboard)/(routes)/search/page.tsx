@@ -11,7 +11,7 @@ async function search() {
   console.log({ categories });
 
   return (
-    <div>
+    <div className="p-4">
       <Categories categories={categories} />
     </div>
   );

@@ -1,6 +1,7 @@
 'use client';
 import { cn } from '@/lib/utils';
 import { Category } from '@prisma/client';
+import qs from 'query-string';
 import {
   CogIcon,
   CameraIcon,
@@ -11,6 +12,8 @@ import {
   FilmIcon,
   LucideIcon,
 } from 'lucide-react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { on } from 'events';
 
 const iconMap = {
   Engineering: CogIcon,
@@ -31,7 +34,12 @@ function Categories({ categories }: CategoriesProps) {
         const Icon = iconMap[category.name as keyof typeof iconMap];
 
         return (
-          <CategoryItem key={category.id} name={category.name} Icon={Icon} />
+          <CategoryItem
+            key={category.id}
+            value={category.id}
+            name={category.name}
+            Icon={Icon}
+          />
         );
       })}
     </div>
@@ -40,14 +48,45 @@ function Categories({ categories }: CategoriesProps) {
 
 export default Categories;
 
-function CategoryItem({ name, Icon }: { name: string; Icon?: LucideIcon }) {
+function CategoryItem({
+  name,
+  Icon,
+  value,
+}: {
+  value: string;
+  name: string;
+  Icon?: LucideIcon;
+}) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchparams = useSearchParams();
+  const currenCategoryId = searchparams.get('categoryId');
+  const currenTitle = searchparams.get('title');
+
+  const isActive = currenCategoryId === value;
+  const onClick = () => {
+    const url = qs.stringifyUrl(
+      {
+        url: pathname,
+        query: {
+          categoryId: isActive ? undefined : value,
+          title: currenTitle || undefined,
+        },
+      },
+      { skipNull: true, skipEmptyString: true }
+    );
+    router.push(url);
+  };
+
   return (
     <button
+      onClick={onClick}
       className={cn(
-        `flex  items-center gap-x-2 hover:border-sky-700 transition py-2 px-3 border-slate-300 rounded-full`
+        `flex  items-center gap-x-2 hover:border-sky-700 transition py-2 px-3 border-slate-300 border rounded-full`,
+        isActive && 'bg-sky-200/20  text-sky-700'
       )}
     >
-      {Icon && <Icon className="h-4 w-4" />}
+      {Icon && <Icon className="h-4 w-4 text-orange-400" />}
       <span className=" truncate hidden md:flex ">{name}</span>
     </button>
   );
