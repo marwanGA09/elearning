@@ -115,30 +115,32 @@ export const columns: ColumnDef<Course>[] = [
       const course = row.original;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem
+        <div className="text-end">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0 ">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              {/* <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
             >
               Copy payment ID
             </DropdownMenuItem> */}
-            <DropdownMenuSeparator />
-            <Link href={`/teacher/courses/${course.id}`}>
-              <DropdownMenuItem>
-                <Pencil className="w-4 h-4 ml-2" />
-                Edit
-              </DropdownMenuItem>
-            </Link>
-            {/* <DropdownMenuItem>View payment details</DropdownMenuItem> */}
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuSeparator />
+              <Link href={`/teacher/courses/${course.id}`}>
+                <DropdownMenuItem>
+                  <Pencil className="w-4 h-4 ml-2" />
+                  Edit
+                </DropdownMenuItem>
+              </Link>
+              {/* <DropdownMenuItem>View payment details</DropdownMenuItem> */}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       );
     },
   },

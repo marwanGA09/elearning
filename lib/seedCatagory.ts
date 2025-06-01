@@ -7,22 +7,22 @@ const main = async () => {
   await db.category.createMany({
     data: [
       {
-        name: 'Math',
+        name: 'Engineering',
       },
       {
-        name: 'Science',
+        name: 'Photography',
       },
       {
-        name: 'History',
+        name: 'Fitness',
       },
       {
-        name: 'Geography',
+        name: 'Accounting',
       },
-      { name: 'Web development' },
+      // { name: 'Web development' },
       {
-        name: 'Data Science',
+        name: 'Computer science',
       },
-      { name: 'Filming' },
+      // { name: 'Filming' },
     ],
   });
   console.log('done ...');
